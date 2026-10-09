@@ -15,6 +15,7 @@
   <p>This passive page confirms that a browser left the legitimate Cortex origin and reached a researcher-controlled origin.</p>
   <p>Destination: <code>https://cortex.atmeta.co/</code></p>
   <p>Canary: <strong>META-CORTEX-OPEN-REDIRECT-2026-10-09</strong></p>
-  <p>No credentials, cookies, analytics, or visitor data are collected.</p>
+  <p>This page sends a privacy-limited Canarytoken visit notification. It does not collect credentials or cookies, and it suppresses the referrer.</p>
+  <script src="/canary-beacon.js" data-source="cortex-root"></script>
 </body>
 </html>
