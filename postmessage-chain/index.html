@@ -18,6 +18,8 @@
   <p>This page sends a benign HTML canary to the Cortex <code>LinkFrame_VForm</code> window. It does not read data or perform account actions.</p>
   <button id="run" type="button">Open Meta Cortex and send canary</button>
   <pre id="status">Idle.</pre>
+  <p>Opening this page sends a privacy-limited Canarytoken visit notification with the referrer suppressed.</p>
+  <script src="/canary-beacon.js" data-source="cortex-postmessage"></script>
   <script>
     const target = "https://cortex.atmeta.com/C.aspx?VP3=CMS3&VF=LinkFrame_VForm&URL=https%3A%2F%2Fexample.com";
     const status = document.getElementById("status");
